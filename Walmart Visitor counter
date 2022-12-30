@@ -1,0 +1,112 @@
+<html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+    <div class="bg-image" style="background-image: url('https://as1.ftcdn.net/v2/jpg/02/10/34/18/1000_F_210341855_LHZIqvUArye7DbQS47amDxL4Fq3OCEJO.jpg');  background-repeat: no-repeat; background-size: cover;height: 100vh">
+        <div class="container">
+            <h1 style="text-align:center;font-size: 45px;color: black;">Walmart Visitor Counter</h1>
+            <br><br>
+            <div class="row">
+                <div class="col-6">
+                        <p>
+                            <label style="font-weight:bold ;font-size: 18px ;color:black;">Gender</label>
+                            <select class="form-control" id="gender" style="width:95%;">
+                                <option value="0" disabled selected>--Select--</option>
+                                <option value="1">Male</option>
+                                <option value="2">Female</option>
+                            </select>
+                            <span id="errgender" style="color:rgb(146, 11, 11)"></span>
+                        </p>
+                        <br><br>
+
+                        <p>
+                            <label style="font-weight:bold ;font-size: 18px ; color: black;">Age Group</label>
+                            <select class="form-control" id="age" style="width:95% ;">
+                                <option value="0" disabled selected>--Select--</option>
+                                <option value="1">Kid (Age 5-12)</option>
+                                <option value="2">Teen (Age 13-19)</option>
+                                <option value="3">Young (Age 20-30) </option>
+                                <option value="4">Adult (Age 31-60)</option>
+                                <option value="5">Senior Citizen (Age 60-100)</option>
+                            </select>
+                            <span id="errage" style="color:rgb(146, 11, 11)"></span>
+                        </p>
+                        <br><br>
+
+                        <p>
+                        <label style="font-weight:bold ;font-size: 18px ;color: black;">Comment</label>
+                        <textarea class="form-control" style="width:95%" id="comment" placeholder="Please Enter Comment"></textarea>
+                        <span id="errcomment" style="color:rgb(146, 11, 11)"></span>
+                        <br><br>
+                        </p>
+
+                        <button class="btn btn-danger" style="width:95%; font-size: 18px ;" onclick="validateForm()">Submit</button>
+                        <span id="successMessage" style="color: rgb(5, 58, 5);"></span>
+                </div>
+                <div class="col-6">
+                    <img src="https://cdn.corporate.walmart.com/dims4/WMT/71169a3/2147483647/strip/true/crop/2389x930+0+0/resize/980x381!/quality/90/?url=https%3A%2F%2Fcdn.corporate.walmart.com%2Fd6%2Fe7%2F48e91bac4a8ca8f22985b3682370%2Fwalmart-logos-lockupwtag-horiz-blu-rgb.png" width="600" height="200">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function validateForm(){
+            //fetch the value from Gender select
+            var gender=document.getElementById('gender').value
+            //check if gender selected or not
+            if (gender==0) {
+                document.getElementById('errgender').innerHTML= 'Please select gender';
+                return false;
+            }
+            else {
+                document.getElementById('errgender').innerHTML= '';
+            }
+
+                //Validation of age
+            var age=document.getElementById('age').value
+            if (age==0) {
+                document.getElementById('errage').innerHTML= 'Please select age';
+                return false;
+            }
+            else {
+                document.getElementById('errage').innerHTML= '';
+            }
+                //Validation of Comment
+            var comment=document.getElementById('comment').value
+            var regxComment=/^[A-Za-z0-9 ]+$/;
+            //you can allo # and @ also. ^ symbol is denoting first character and $ is for last character
+            if (comment) {
+                var validcomment=comment.match(regxComment)
+                //if recieved comment is matched with my regular expression
+                if(!validcomment){
+                    document.getElementById('errcomment').innerHTML= 'Only Alphanumeric Characters are allowed';
+                    return false;
+            }
+            else {
+                document.getElementById('errcomment').innerHTML= '';
+            }
+        }
+            else{
+                document.getElementById('errcomment').innerHTML= '';
+            }  
+   
+/Ajax Code Starts/
+var xhttp = new XMLHttpRequest();
+xhttp.onreadystatechange= function()
+{
+    if(this.readyState == 4 && this.status ==200)
+    {
+        document.getElementById("successMessage").innerHTML=this.responseText;
+    }
+};
+xhttp.open("POST","http://localhost:5000/add-visitors",true);
+xhttp.setRequestHeader("content-type","application/x-www-form-urlencoded");
+xhttp.send("gender="+gender+"&age-group="+age+"&comments="+comment);
+
+/ajax code ends/
+}
+
+    </script>
+</body>
+</html>
